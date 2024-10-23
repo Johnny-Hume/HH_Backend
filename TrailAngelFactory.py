@@ -6,11 +6,12 @@ class TrailAngelFactory:
     def __init__(self) -> None:
         pass
 
-    def trail_angel_from_tuple(self, tuple):
-        return TrailAngel(tuple[0], tuple[1], tuple[2], tuple[3], tuple[4], tuple[5])
+    def trail_angel_from_row(self, row):
+        id = row[0]
+        return TrailAngel(row[1], row[2], row[3], row[4], row[5], id)
 
-    def trail_angels_from_tuples(self, tuples: list):
+    def trail_angels_from_rows(self, rows: list):
         angels = []
-        for tuple in tuples:
-            angels.append(self.trail_angel_from_tuple(tuple))
+        for tuple in rows:
+            angels.append(self.trail_angel_from_row(tuple))
         return angels
