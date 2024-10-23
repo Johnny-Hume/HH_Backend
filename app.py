@@ -7,18 +7,27 @@ from Hiker import Hiker
 from TrailAngelService import TrailAngelService
 from HikerService import HikerService
 from data.database import Database
+from Post import Post
+from PostService import PostService
 
 utils = Utils()
 app = Flask(__name__)
 CORS(app)
 
+# ===== POSTS =====
+
+@app.post("/post")
+def create_post():
+    json = request.get_json()
+    parsed_post = Post(**json)
+    return post_service.create_post(parsed_post)
 
 # ===== HIKERS =====
 
 @app.post("/hiker")
 def create_hiker():
-    json = request.get_json()
-    parsed_hiker = Hiker(None, json["trail_name"], json["bio"])
+    r_json = request.get_json()
+    parsed_hiker = Hiker(**r_json)
     created_hiker = hiker_service.create_hiker(parsed_hiker)
     return jsonify(created_hiker.__dict__)
 
@@ -55,9 +64,7 @@ def get_trail_angel_by_id():
 @app.post("/trailangel")
 def create_trail_angel():
     json = request.get_json()
-    angel = TrailAngel(None, json["first_name"], json["last_name"],
-                       json["location"], json["capacity"], json["cost"])
-    created_angel = trail_angel_service.create_trail_angel(angel)
+    created_angel = trail_angel_service.create_trail_angel(TrailAngel(**json))
     return jsonify(created_angel.__dict__)
 
 
@@ -65,6 +72,7 @@ if __name__ == "__main__":
     db = Database("data/hiker_helper.db")
     trail_angel_service = TrailAngelService(db)
     hiker_service = HikerService(db)
+    post_service = PostService(db)
 
     db.setup()
     port = int(os.environ.get('PORT', 5000))
