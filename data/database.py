@@ -10,6 +10,7 @@ class Database:
         self.posts_table = "posts"
 
     def setup(self):
+        self.__execute("PRAGMA foreign_keys = ON")
         self.__create_tables()
 
     # ===== POSTS =====
@@ -17,9 +18,15 @@ class Database:
         row = self.__save_row(self.posts_table, post)
         return row
 
+    def get_posts(self):
+        return self.__fetch_all(self.posts_table)
+
     # ===== HIKERS =====
     def get_hikers(self):
         return self.__fetch_all(self.hikers_table)
+
+    def get_hiker(self, id):
+        return self.__get_row_by_id(id, self.hikers_table)
 
     def save_hiker(self, hiker):
         return self.__save_row(self.hikers_table, hiker)
@@ -33,9 +40,7 @@ class Database:
         return self.__fetch_all(self.trail_angels_table)
 
     def get_trail_angel(self, id):
-        sql = f"SELECT * FROM {self.trail_angels_table} WHERE id={id}"
-        cursor = self.__execute(sql)
-        return cursor.fetchone()
+        return self.__get_row_by_id(id, self.trail_angels_table)
 
     def __create_tables(self):
         trail_angels_sql = f"""CREATE TABLE IF NOT EXISTS {self.trail_angels_table}(
@@ -70,6 +75,12 @@ class Database:
         self.__execute(trail_angels_sql)
         self.__execute(hikers_sql)
         self.__execute(posts_sql)
+
+
+    def __get_row_by_id(self, id, table_name):
+        sql = f"SELECT * FROM {table_name} WHERE id={id}"
+        cursor = self.__execute(sql)
+        return cursor.fetchone()
 
     def __save_row(self, table_name, obj):
 
