@@ -20,7 +20,13 @@ CORS(app)
 def create_post():
     json = request.get_json()
     parsed_post = Post(**json)
-    return post_service.create_post(parsed_post)
+    created_post = post_service.create_post(parsed_post)
+    return jsonify(created_post.__dict__)
+
+@app.route("/posts")
+def get_posts():
+    posts = post_service.get_posts()
+    return utils.jsonify_list(posts)
 
 # ===== HIKERS =====
 
