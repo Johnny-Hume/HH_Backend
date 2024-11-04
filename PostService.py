@@ -7,6 +7,7 @@ class PostService:
 
     def create_post(self, post):
         hiker = HikerService(self.db).get_hiker(post.hiker_id)
+
         if not hiker:
             raise Exception("Problem validating hiker creating post")
         row = self.db.save_post(post)
@@ -15,6 +16,13 @@ class PostService:
     def get_posts(self): 
         rows = self.db.get_posts()
         return self.posts_from_rows(rows)
+
+    def get_post(self, post_id):
+        row = self.db.get_post(post_id)
+        if not row:
+            raise Exception(f"Post Id [{post_id}] Not Found")
+        post = self.post_from_row(row)
+        return post
 
     def posts_from_rows(self, rows):
         posts = []

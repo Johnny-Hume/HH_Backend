@@ -28,6 +28,18 @@ def get_posts():
     posts = post_service.get_posts()
     return utils.jsonify_list(posts)
 
+@app.route("/post")
+def get_post():
+
+    post_id = None
+    try:
+        post_id = request.args["id"]
+    except Exception:
+        return jsonify("Missing id")
+
+    post = post_service.get_post(post_id)
+    return jsonify(post.__dict__)
+
 # ===== HIKERS =====
 
 @app.post("/hiker")

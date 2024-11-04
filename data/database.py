@@ -21,6 +21,9 @@ class Database:
     def get_posts(self):
         return self.__fetch_all(self.posts_table)
 
+    def get_post(self, id):
+        return self.__get_row_by_id(id, self.posts_table)
+
     # ===== HIKERS =====
     def get_hikers(self):
         return self.__fetch_all(self.hikers_table)
