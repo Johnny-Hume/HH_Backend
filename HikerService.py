@@ -16,7 +16,7 @@ class HikerService:
         return self.hikers_from_rows(rows)
 
     def get_hiker(self, hiker_id):
-        row = self.db.get_trail_angel(hiker_id)
+        row = self.db.get_hiker(hiker_id)
         if not row:
             raise Exception(f"Hiker Id [{hiker_id}] Not Found")
         hiker = self.hiker_from_row(row)
