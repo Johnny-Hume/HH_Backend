@@ -18,6 +18,10 @@ class Database:
         row = self.__save_row(self.posts_table, post)
         return row
 
+    def delete_post(self, post_id):
+        sql = f"DELETE FROM {self.posts_table} WHERE id=?"
+        self.__execute_with_values(sql, (post_id,))
+
     def get_posts(self):
         return self.__fetch_all(self.posts_table)
 

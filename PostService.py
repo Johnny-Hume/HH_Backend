@@ -11,26 +11,29 @@ class PostService:
         if not hiker:
             raise Exception("Problem validating hiker creating post")
         row = self.db.save_post(post)
-        return self.post_from_row(row)
+        return self.__post_from_row(row)
 
     def get_posts(self): 
         rows = self.db.get_posts()
-        return self.posts_from_rows(rows)
+        return self.__posts_from_rows(rows)
 
     def get_post(self, post_id):
         row = self.db.get_post(post_id)
         if not row:
             raise Exception(f"Post Id [{post_id}] Not Found")
-        post = self.post_from_row(row)
+        post = self.__post_from_row(row)
         return post
 
-    def posts_from_rows(self, rows):
+    def delete_post(self, post_id):
+        self.db.delete_post(post_id)
+
+    def __posts_from_rows(self, rows):
         posts = []
         for row in rows:
-            posts.append(self.post_from_row(row))
+            posts.append(self.__post_from_row(row))
         return posts
 
-    def post_from_row(self, row):
+    def __post_from_row(self, row):
 
         id = row[0]
         hiker_id = row[1]

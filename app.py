@@ -40,6 +40,17 @@ def get_post():
     post = post_service.get_post(post_id)
     return jsonify(post.__dict__)
 
+@app.delete("/post")
+def delete_post():
+    post_id = None
+    try:
+        post_id = request.args["id"]
+    except Exception:
+        return ({"Message": "Missing ID"}, 400)
+
+    post_service.delete_post(post_id)
+    return ("", 204)
+
 # ===== HIKERS =====
 
 @app.post("/hiker")
