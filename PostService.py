@@ -10,12 +10,14 @@ class PostService:
     def create_post(self, post):
 
         user = None
-        if(post.user_type == UserType.HIKER):
+        user_type = UserType(post.user_type)
+
+        if(user_type == UserType.HIKER):
             user = HikerService(self.db).get_hiker(post.user_id)
-        elif(post.user_type == UserType.TRAILANGEL):
+        elif(user_type == UserType.TRAILANGEL):
             user = TrailAngelService(self.db).get_trail_angel(post.user_id)
         else:
-            raise Exception("User Type Undefined")
+            raise Exception(f"User Type [{post.user_type}] Undefined")
 
         if not user:
             raise Exception("Problem validating user creating post")
@@ -35,6 +37,10 @@ class PostService:
         return post
 
     def delete_post(self, post_id):
+        existing_post = self.db.get_post(post_id)
+        if not existing_post:
+            print(f"Attempted to delete nonexistent post [{post_id}]")
+            return
         self.db.delete_post(post_id)
 
     def __posts_from_rows(self, rows):
