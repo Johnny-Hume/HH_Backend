@@ -1,6 +1,8 @@
+from UserType import UserType
+
 class Post:
 
-    def __init__(self, title: str, user_id : str, user_type: str,pickup: str,dropoff: str,date: str, num_passengers: int, id = None) -> None:
+    def __init__(self, title: str, user_id : str, user_type: UserType,pickup: str,dropoff: str,date: str, num_passengers: int, id = None) -> None:
         self.id = id
         self.user_id = user_id
         self.user_type = user_type
