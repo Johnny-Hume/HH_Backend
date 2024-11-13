@@ -1,15 +1,25 @@
 from Post import Post
 from HikerService import HikerService
+from TrailAngelService import TrailAngelService
+from UserType import UserType
 class PostService:
 
     def __init__(self, db) -> None:
         self.db = db
 
     def create_post(self, post):
-        hiker = HikerService(self.db).get_hiker(post.hiker_id)
 
-        if not hiker:
-            raise Exception("Problem validating hiker creating post")
+        user = None
+        if(post.user_type == UserType.HIKER):
+            user = HikerService(self.db).get_hiker(post.user_id)
+        elif(post.user_type == UserType.TRAILANGEL):
+            user = TrailAngelService(self.db).get_trail_angel(post.user_id)
+        else:
+            raise Exception("User Type Undefined")
+
+        if not user:
+            raise Exception("Problem validating user creating post")
+
         row = self.db.save_post(post)
         return self.__post_from_row(row)
 
