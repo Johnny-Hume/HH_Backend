@@ -1,5 +1,5 @@
 import sqlite3
-
+from Post import Post
 
 class Database:
 
@@ -14,7 +14,7 @@ class Database:
         self.__create_tables()
 
     # ===== POSTS =====
-    def save_post(self, post):
+    def save_post(self, post: Post):
         row = self.__save_row(self.posts_table, post)
         return row
 
@@ -69,13 +69,13 @@ class Database:
 
         posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.posts_table}(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            hiker_id INTEGER NOT NULL,
+            user_id INTEGER,
+            user_type TEXT,
             title TEXT NOT NULL,
             pickup TEXT NOT NULL,
             dropoff TEXT NOT NULL,
             date TEXT NOT NULL,
-            num_passengers INTEGER,
-            FOREIGN KEY(hiker_id) REFERENCES hikers(id)
+            num_passengers INTEGER
         )
         """
 
