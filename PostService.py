@@ -52,13 +52,14 @@ class PostService:
     def __post_from_row(self, row):
 
         id = row[0]
-        hiker_id = row[1]
-        title = row[2]
-        pickup = row[3]
-        dropoff = row[4]
-        date = row[5]
-        num_passengers = row[6]
-        return Post(hiker_id, title, pickup, dropoff, date, num_passengers, id)
+        user_id = row[1]
+        user_type = row[2]
+        title = row[3]
+        pickup = row[4]
+        dropoff = row[5]
+        date = row[6]
+        num_passengers = row[7]
+        return Post(user_id, user_type, title, pickup, dropoff, date, num_passengers, id)
 
 
 
