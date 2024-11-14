@@ -1,5 +1,6 @@
 import sqlite3
 from Post import Post
+from GeneralPost import GeneralPost
 
 class Database:
 
@@ -8,10 +9,18 @@ class Database:
         self.trail_angels_table = "trailangels"
         self.hikers_table = "hikers"
         self.posts_table = "posts"
+        self.general_posts_table = "general_posts_table"
 
     def setup(self):
         self.__execute("PRAGMA foreign_keys = ON")
         self.__create_tables()
+
+    # ===== GENERAL POSTS =====
+    def save_general_post(self, general_post: GeneralPost):
+        return self.__save_row(self.general_posts_table, general_post)
+
+    def get_general_posts(self):
+        return self.__fetch_all(self.general_posts_table)
 
     # ===== POSTS =====
     def save_post(self, post: Post):
@@ -79,9 +88,19 @@ class Database:
         )
         """
 
+        general_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.general_posts_table}(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            user_type TEXT,
+            title TEXT NOT NULL,
+            text TEXT NOT NULL
+        )
+        """
+
         self.__execute(trail_angels_sql)
         self.__execute(hikers_sql)
         self.__execute(posts_sql)
+        self.__execute(general_posts_sql)
 
 
     def __get_row_by_id(self, id, table_name):
