@@ -14,6 +14,10 @@ utils = Utils()
 app = Flask(__name__)
 CORS(app)
 
+@app.errorhandler(Exception)
+def handle(e):
+    return "Internal Server Error", 500
+
 # ===== POSTS =====
 
 @app.post("/post")
