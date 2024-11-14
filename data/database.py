@@ -76,8 +76,9 @@ class Database:
         )
         """
 
-        posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.ride_posts_table}(
+        ride_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.ride_posts_table}(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
             user_id INTEGER,
             user_type TEXT,
             title TEXT NOT NULL,
@@ -90,6 +91,7 @@ class Database:
 
         general_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.general_posts_table}(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            created_at TEXT NOT NULL,
             user_id INTEGER,
             user_type TEXT,
             title TEXT NOT NULL,
@@ -99,7 +101,7 @@ class Database:
 
         self.__execute(trail_angels_sql)
         self.__execute(hikers_sql)
-        self.__execute(posts_sql)
+        self.__execute(ride_posts_sql)
         self.__execute(general_posts_sql)
 
 

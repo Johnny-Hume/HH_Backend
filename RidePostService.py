@@ -3,6 +3,7 @@ from HikerService import HikerService
 from TrailAngelService import TrailAngelService
 from UserType import UserType
 from data.database import Database
+from datetime import datetime
 
 class RidePostService:
 
@@ -11,20 +12,13 @@ class RidePostService:
 
     def create_ride_post(self, ride_post):
 
-        user = None
-        user_type = UserType(ride_post.user_type)
+        self.__validate_user(ride_post)
 
-        if(user_type == UserType.HIKER):
-            user = HikerService(self.db).get_hiker(ride_post.user_id)
-        elif(user_type == UserType.TRAILANGEL):
-            user = TrailAngelService(self.db).get_trail_angel(ride_post.user_id)
-        else:
-            raise Exception(f"User Type [{ride_post.user_type}] Undefined")
-
-        if not user:
-            raise Exception("Problem validating user creating post")
+        now = datetime.now()
+        ride_post.created_at = str(now)
 
         row = self.db.save_ride_post(ride_post)
+
         return self.__ride_post_from_row(row)
 
     def get_ride_posts(self): 
@@ -52,8 +46,22 @@ class RidePostService:
         return posts
 
     def __ride_post_from_row(self, row):
-        id, *args = row
-        return RidePost(*args, id = id)
+        id, created_at, *args = row
+        return RidePost(*args, id = id, created_at=created_at)
+
+    def __validate_user(self, ride_post):
+        user = None
+        user_type = UserType(ride_post.user_type)
+
+        if(user_type == UserType.HIKER):
+            user = HikerService(self.db).get_hiker(ride_post.user_id)
+        elif(user_type == UserType.TRAILANGEL):
+            user = TrailAngelService(self.db).get_trail_angel(ride_post.user_id)
+        else:
+            raise Exception(f"User Type [{ride_post.user_type}] Undefined")
+
+        if not user:
+            raise Exception("Problem validating user creating post")
 
 
 
