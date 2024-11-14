@@ -38,19 +38,19 @@ def get_general_posts():
 
 # ===== RIDE POSTS =====
 
-@app.post("/post")
+@app.post("/ride_post")
 def create_ride_post():
     json = request.get_json()
     parsed_ride_post = RidePost(**json)
     created_ride_post = ride_post_service.create_ride_post(parsed_ride_post)
     return created_ride_post.__dict__, HTTPStatus.CREATED
 
-@app.route("/posts")
+@app.route("/ride_posts")
 def get_ride_posts():
     ride_posts = ride_post_service.get_ride_posts()
     return utils.jsonify_list(ride_posts)
 
-@app.route("/post")
+@app.route("/ride_post")
 def get_ride_post():
 
     ride_post_id = None
@@ -62,7 +62,7 @@ def get_ride_post():
     ride_post = ride_post_service.get_ride_post(ride_post_id)
     return jsonify(ride_post.__dict__)
 
-@app.delete("/post")
+@app.delete("/ride_post")
 def delete_ride_post():
     ride_post_id = None
     try:
