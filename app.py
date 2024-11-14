@@ -7,8 +7,8 @@ from Hiker import Hiker
 from TrailAngelService import TrailAngelService
 from HikerService import HikerService
 from data.database import Database
-from Post import Post
-from PostService import PostService
+from RidePost import RidePost
+from RidePostService import RidePostService
 from GeneralPost import GeneralPost
 from GeneralPostService import GeneralPostService
 
@@ -35,41 +35,41 @@ def get_general_posts():
     general_posts = general_post_service.get_general_posts()
     return utils.jsonify_list(general_posts)
 
-# ===== POSTS =====
+# ===== RIDE POSTS =====
 
 @app.post("/post")
-def create_post():
+def create_ride_post():
     json = request.get_json()
-    parsed_post = Post(**json)
-    created_post = post_service.create_post(parsed_post)
-    return jsonify(created_post.__dict__)
+    parsed_ride_post = RidePost(**json)
+    created_ride_post = ride_post_service.create_ride_post(parsed_ride_post)
+    return jsonify(created_ride_post.__dict__)
 
 @app.route("/posts")
-def get_posts():
-    posts = post_service.get_posts()
-    return utils.jsonify_list(posts)
+def get_ride_posts():
+    ride_posts = ride_post_service.get_ride_posts()
+    return utils.jsonify_list(ride_posts)
 
 @app.route("/post")
-def get_post():
+def get_ride_post():
 
-    post_id = None
+    ride_post_id = None
     try:
-        post_id = request.args["id"]
+        ride_post_id = request.args["id"]
     except Exception:
         return jsonify("Missing id")
 
-    post = post_service.get_post(post_id)
-    return jsonify(post.__dict__)
+    ride_post = ride_post_service.get_ride_post(ride_post_id)
+    return jsonify(ride_post.__dict__)
 
 @app.delete("/post")
-def delete_post():
-    post_id = None
+def delete_ride_post():
+    ride_post_id = None
     try:
-        post_id = request.args["id"]
+        ride_post_id = request.args["id"]
     except Exception:
         return ({"Message": "Missing ID"}, 400)
 
-    post_service.delete_post(post_id)
+    ride_post_service.delete_ride_post(ride_post_id)
     return ("", 204)
 
 # ===== HIKERS =====
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     db = Database("data/hiker_helper.db")
     trail_angel_service = TrailAngelService(db)
     hiker_service = HikerService(db)
-    post_service = PostService(db)
+    ride_post_service = RidePostService(db)
     general_post_service = GeneralPostService(db)
 
     db.setup()

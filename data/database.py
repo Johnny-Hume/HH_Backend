@@ -1,5 +1,5 @@
 import sqlite3
-from Post import Post
+from RidePost import RidePost
 from GeneralPost import GeneralPost
 
 class Database:
@@ -8,8 +8,8 @@ class Database:
         self.db_name = database_name
         self.trail_angels_table = "trailangels"
         self.hikers_table = "hikers"
-        self.posts_table = "posts"
-        self.general_posts_table = "general_posts_table"
+        self.ride_posts_table = "ride_posts"
+        self.general_posts_table = "general_posts"
 
     def setup(self):
         self.__execute("PRAGMA foreign_keys = ON")
@@ -22,20 +22,20 @@ class Database:
     def get_general_posts(self):
         return self.__fetch_all(self.general_posts_table)
 
-    # ===== POSTS =====
-    def save_post(self, post: Post):
-        row = self.__save_row(self.posts_table, post)
+    # ===== RIDE POSTS =====
+    def save_ride_post(self, ride_post: RidePost):
+        row = self.__save_row(self.ride_posts_table, ride_post)
         return row
 
-    def delete_post(self, post_id):
-        sql = f"DELETE FROM {self.posts_table} WHERE id=?"
-        self.__execute_with_values(sql, (post_id,))
+    def get_ride_posts(self):
+        return self.__fetch_all(self.ride_posts_table)
 
-    def get_posts(self):
-        return self.__fetch_all(self.posts_table)
+    def get_ride_post(self, id):
+        return self.__get_row_by_id(id, self.ride_posts_table)
 
-    def get_post(self, id):
-        return self.__get_row_by_id(id, self.posts_table)
+    def delete_ride_post(self, id):
+        sql = f"DELETE FROM {self.ride_posts_table} WHERE id=?"
+        self.__execute_with_values(sql, (id,))
 
     # ===== HIKERS =====
     def get_hikers(self):
@@ -76,7 +76,7 @@ class Database:
         )
         """
 
-        posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.posts_table}(
+        posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.ride_posts_table}(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             user_type TEXT,
