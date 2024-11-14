@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from http import HTTPStatus
 from flask_cors import CORS
 import os
 from Utils import Utils
@@ -19,7 +20,7 @@ CORS(app)
 @app.errorhandler(Exception)
 def handle(e):
     print(e)
-    return "Internal Server Error", 500                                        
+    return "Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR
 
 # ===== GENERALPOSTS =====
 
@@ -28,7 +29,7 @@ def create_general_post():
     json = request.get_json()
     parsed_post = GeneralPost(**json)
     created_post = general_post_service.create_general_post(parsed_post)
-    return jsonify(created_post.__dict__)
+    return created_post.__dict__, HTTPStatus.CREATED
 
 @app.route("/general_posts")
 def get_general_posts():
@@ -42,7 +43,7 @@ def create_ride_post():
     json = request.get_json()
     parsed_ride_post = RidePost(**json)
     created_ride_post = ride_post_service.create_ride_post(parsed_ride_post)
-    return jsonify(created_ride_post.__dict__)
+    return created_ride_post.__dict__, HTTPStatus.CREATED
 
 @app.route("/posts")
 def get_ride_posts():
