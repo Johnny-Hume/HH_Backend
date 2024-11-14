@@ -2,9 +2,11 @@ from Post import Post
 from HikerService import HikerService
 from TrailAngelService import TrailAngelService
 from UserType import UserType
+from data.database import Database
+
 class PostService:
 
-    def __init__(self, db) -> None:
+    def __init__(self, db: Database) -> None:
         self.db = db
 
     def create_post(self, post):
@@ -50,16 +52,8 @@ class PostService:
         return posts
 
     def __post_from_row(self, row):
-
-        id = row[0]
-        user_id = row[1]
-        user_type = row[2]
-        title = row[3]
-        pickup = row[4]
-        dropoff = row[5]
-        date = row[6]
-        num_passengers = row[7]
-        return Post(user_id, user_type, title, pickup, dropoff, date, num_passengers, id)
+        id, *args = row
+        return Post(*args, id = id)
 
 
 
