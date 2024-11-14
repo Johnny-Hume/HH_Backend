@@ -1,11 +1,8 @@
 from UserType import UserType
+from Post import Post
 
-class GeneralPost:
+class GeneralPost(Post):
 
-    def __init__(self, title: str, user_id : str, user_type: UserType, text : str, id = None, created_at = None) -> None:
-        self.id = id
-        self.created_at = created_at
-        self.user_id = user_id
-        self.user_type = user_type
-        self.title = title
+    def __init__(self, user_id : str, user_type: UserType, title: str, text : str, id = None, created_at = None) -> None:
+        Post.__init__(self, id=id, created_at=created_at, title=title, user_id=user_id, user_type=user_type)
         self.text = text

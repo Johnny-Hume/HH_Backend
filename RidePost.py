@@ -1,12 +1,13 @@
 from UserType import UserType
+from Post import Post
 
-class RidePost:
+class RidePost(Post):
 
     def __init__(
             self,
-            title: str,
             user_id : str,
             user_type: UserType,
+            title: str,
             pickup: str,
             dropoff: str,
             date: str,
@@ -14,11 +15,7 @@ class RidePost:
             id = None,
             created_at = None
     ) -> None:
-        self.id = id
-        self.created_at = created_at
-        self.user_id = user_id
-        self.user_type = user_type
-        self.title = title
+        Post.__init__(self, id=id, created_at=created_at, title=title, user_id=user_id, user_type=user_type)
         self.pickup = pickup
         self.dropoff = dropoff
         self.date = date
