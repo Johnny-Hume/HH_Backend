@@ -9,6 +9,8 @@ from HikerService import HikerService
 from data.database import Database
 from Post import Post
 from PostService import PostService
+from GeneralPost import GeneralPost
+from GeneralPostService import GeneralPostService
 
 utils = Utils()
 app = Flask(__name__)
@@ -16,7 +18,22 @@ CORS(app)
 
 @app.errorhandler(Exception)
 def handle(e):
-    return "Internal Server Error", 500
+    print(e)
+    return "Internal Server Error", 500                                        
+
+# ===== GENERALPOSTS =====
+
+@app.post("/general_post")
+def create_general_post():
+    json = request.get_json()
+    parsed_post = GeneralPost(**json)
+    created_post = general_post_service.create_general_post(parsed_post)
+    return jsonify(created_post.__dict__)
+
+@app.route("/general_posts")
+def get_general_posts():
+    general_posts = general_post_service.get_general_posts()
+    return utils.jsonify_list(general_posts)
 
 # ===== POSTS =====
 
@@ -106,6 +123,7 @@ if __name__ == "__main__":
     trail_angel_service = TrailAngelService(db)
     hiker_service = HikerService(db)
     post_service = PostService(db)
+    general_post_service = GeneralPostService(db)
 
     db.setup()
     port = int(os.environ.get('PORT', 5000))
