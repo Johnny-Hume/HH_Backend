@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
 from http import HTTPStatus
+
 from flask_cors import CORS
 import os
+import traceback
 from Utils import Utils
 from TrailAngel import TrailAngel
 from Hiker import Hiker
@@ -12,6 +14,7 @@ from RidePost import RidePost
 from RidePostService import RidePostService
 from GeneralPost import GeneralPost
 from GeneralPostService import GeneralPostService
+from PostService import PostService
 
 utils = Utils()
 app = Flask(__name__)
@@ -19,7 +22,7 @@ CORS(app)
 
 @app.errorhandler(Exception)
 def handle(e):
-    print(e)
+    print(traceback.format_exc())
     return "Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR
 
 # ===== GENERALPOSTS =====
@@ -73,6 +76,12 @@ def delete_ride_post():
     ride_post_service.delete_ride_post(ride_post_id)
     return ("", 204)
 
+# ===== POSTS =====
+@app.route("/posts")
+def get_all_posts():
+    posts = post_service.get_all_posts()
+    return utils.jsonify_list(posts)
+
 # ===== HIKERS =====
 
 @app.post("/hiker")
@@ -121,10 +130,13 @@ def create_trail_angel():
 
 if __name__ == "__main__":
     db = Database("data/hiker_helper.db")
+
     trail_angel_service = TrailAngelService(db)
     hiker_service = HikerService(db)
+
     ride_post_service = RidePostService(db)
     general_post_service = GeneralPostService(db)
+    post_service = PostService(ride_post_service, general_post_service)
 
     db.setup()
     port = int(os.environ.get('PORT', 5000))
