@@ -1,4 +1,5 @@
 import sqlite3
+from uuid import uuid4
 from RidePost import RidePost
 from GeneralPost import GeneralPost
 
@@ -60,7 +61,7 @@ class Database:
 
     def __create_tables(self):
         trail_angels_sql = f"""CREATE TABLE IF NOT EXISTS {self.trail_angels_table}(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY NOT NULL,
             first_name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             location TEXT NOT NULL,
@@ -70,14 +71,14 @@ class Database:
         """
 
         hikers_sql = f"""CREATE TABLE IF NOT EXISTS {self.hikers_table}(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY NOT NULL,
             trail_name TEXT NOT NULL,
             bio TEXT NOT NULL
         )
         """
 
         ride_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.ride_posts_table}(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY NOT NULL,
             created_at TEXT NOT NULL,
             user_id INTEGER,
             user_type TEXT,
@@ -90,7 +91,7 @@ class Database:
         """
 
         general_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.general_posts_table}(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY NOT NULL,
             created_at TEXT NOT NULL,
             user_id INTEGER,
             user_type TEXT,
@@ -116,12 +117,15 @@ class Database:
 
         values = ()
         values_holders = ""
+
         keys_str = ""
         for k, v in items:
-            if (k != "id"):
+            if k == "id":
+                values = values + (table_name + "_" + str(uuid4()),)
+            else:
                 values = values + (v,)
-                keys_str += k + ","
-                values_holders += "?,"
+            keys_str += k + ","
+            values_holders += "?,"
 
         keys_str = keys_str[:-1]
         values_holders = values_holders[:-1]
