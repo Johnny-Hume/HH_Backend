@@ -107,9 +107,14 @@ class Database:
 
 
     def __get_row_by_id(self, id, table_name):
-        sql = f"SELECT * FROM {table_name} WHERE id={id}"
-        cursor = self.__execute(sql)
-        return cursor.fetchone()
+        sql = f"SELECT * FROM {table_name} WHERE id=?"
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(sql, (id,))
+            tup = cursor.fetchall()
+            if len(tup) != 1:
+                return []
+            return tup[0]
 
     def __save_row(self, table_name, obj):
 
