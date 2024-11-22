@@ -1,9 +1,10 @@
 from Hiker import Hiker
+from data.database import Database
 
 
 class HikerService:
 
-    def __init__(self, db) -> None:
+    def __init__(self, db: Database) -> None:
         pass
         self.db = db
 
