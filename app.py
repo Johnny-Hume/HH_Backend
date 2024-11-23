@@ -39,6 +39,13 @@ def get_general_posts():
     general_posts = general_post_service.get_general_posts()
     return utils.jsonify_list(general_posts)
 
+@app.route("/general_post")
+def get_general_post():
+    general_post_id = __get_id(request)
+
+    general_post = general_post_service.get_general_post(general_post_id)
+    return jsonify(general_post.__dict__)
+
 # ===== RIDE POSTS =====
 
 @app.post("/ride_post")
@@ -127,6 +134,11 @@ def create_trail_angel():
     created_angel = trail_angel_service.create_trail_angel(TrailAngel(**json))
     return jsonify(created_angel.__dict__)
 
+def __get_id(request):
+    try:
+        return request.args["id"]
+    except Exception:
+        raise exceptions.BadRequest("Missing [id]")
 
 if __name__ == "__main__":
     db = Database("data/hiker_helper.db")

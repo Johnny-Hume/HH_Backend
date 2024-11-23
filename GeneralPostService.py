@@ -1,3 +1,4 @@
+from werkzeug.exceptions import NotFound
 from data.database import Database
 from GeneralPost import GeneralPost
 from datetime import datetime
@@ -13,6 +14,13 @@ class GeneralPostService:
         for row in rows:
             general_posts.append(self.__general_post_from_row(row))
         return general_posts
+
+    def get_general_post(self, general_post_id):
+        row = self.db.get_general_post(general_post_id)
+        if not row:
+            raise NotFound(f"General Post Id [{general_post_id}] Not Found")
+        post = self.__general_post_from_row(row)
+        return post
 
     def create_general_post(self, general_post: GeneralPost):
 

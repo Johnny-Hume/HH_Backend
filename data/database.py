@@ -24,6 +24,9 @@ class Database:
     def get_general_posts(self):
         return self.__fetch_all(self.general_posts_table)
 
+    def get_general_post(self, id):
+        return self.__get_row_by_id(id, self.general_posts_table)
+
     # ===== RIDE POSTS =====
     def save_ride_post(self, ride_post: RidePost):
         row = self.__save_row(self.ride_posts_table, ride_post)
