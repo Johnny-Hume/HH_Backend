@@ -5,18 +5,17 @@ from flask_cors import CORS
 import os
 import traceback
 
-import werkzeug
 from Utils import Utils
 from domain.TrailAngel import TrailAngel
 from domain.Hiker import Hiker
-from TrailAngelService import TrailAngelService
-from HikerService import HikerService
+from service.TrailAngelService import TrailAngelService
+from service.HikerService import HikerService
 from data.database import Database
 from domain.RidePost import RidePost
-from RidePostService import RidePostService
+from service.RidePostService import RidePostService
 from domain.GeneralPost import GeneralPost
-from GeneralPostService import GeneralPostService
-from PostService import PostService
+from service.GeneralPostService import GeneralPostService
+from service.PostService import PostService
 from werkzeug import exceptions
 
 utils = Utils()

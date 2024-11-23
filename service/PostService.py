@@ -1,5 +1,5 @@
-from RidePostService import RidePostService
-from GeneralPostService import GeneralPostService
+from service.RidePostService import RidePostService
+from service.GeneralPostService import GeneralPostService
 
 class PostService:
 
