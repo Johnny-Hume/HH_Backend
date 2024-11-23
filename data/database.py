@@ -11,6 +11,7 @@ class Database:
         self.hikers_table = "hikers"
         self.ride_posts_table = "ride_posts"
         self.general_posts_table = "general_posts"
+        self.id_delimiter = ":"
 
     def setup(self):
         self.__execute("PRAGMA foreign_keys = ON")
@@ -126,7 +127,7 @@ class Database:
         keys_str = ""
         for k, v in items:
             if k == "id":
-                values = values + (table_name + "_" + str(uuid4()),)
+                values += (f"{table_name}{self.id_delimiter}{str(uuid4())}",)
             else:
                 values = values + (v,)
             keys_str += k + ","
@@ -135,7 +136,10 @@ class Database:
         keys_str = keys_str[:-1]
         values_holders = values_holders[:-1]
 
-        insert_sql = f"""INSERT INTO {table_name}({keys_str}) VALUES({values_holders}) RETURNING *"""
+        insert_sql = f"""INSERT INTO {table_name}
+                     ({keys_str}) 
+                     VALUES({values_holders}) 
+                     RETURNING *"""
         row = self.__execute_with_values(insert_sql, values)
         return row
 
