@@ -4,6 +4,8 @@ from http import HTTPStatus
 from flask_cors import CORS
 import os
 import traceback
+
+import werkzeug
 from Utils import Utils
 from TrailAngel import TrailAngel
 from Hiker import Hiker
@@ -15,6 +17,7 @@ from RidePostService import RidePostService
 from GeneralPost import GeneralPost
 from GeneralPostService import GeneralPostService
 from PostService import PostService
+from werkzeug import exceptions
 
 utils = Utils()
 app = Flask(__name__)
@@ -24,6 +27,16 @@ CORS(app)
 def handle(e):
     print(traceback.format_exc())
     return "Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR
+
+@app.errorhandler(exceptions.BadRequest)
+def handlebr(e):
+    print(traceback.format_exc())
+    return {"Message": e.description}, HTTPStatus.BAD_REQUEST
+
+@app.errorhandler(exceptions.NotFound)
+def handlenf(e):
+    print(traceback.format_exc())
+    return {"Message": e.description}, HTTPStatus.NOT_FOUND
 
 # ===== GENERALPOSTS =====
 
@@ -62,24 +75,13 @@ def get_ride_posts():
 
 @app.route("/ride_post")
 def get_ride_post():
-
-    ride_post_id = None
-    try:
-        ride_post_id = request.args["id"]
-    except Exception:
-        return jsonify("Missing id")
-
+    ride_post_id = __get_id(request)
     ride_post = ride_post_service.get_ride_post(ride_post_id)
     return jsonify(ride_post.__dict__)
 
 @app.delete("/ride_post")
 def delete_ride_post():
-    ride_post_id = None
-    try:
-        ride_post_id = request.args["id"]
-    except Exception:
-        return ({"Message": "Missing ID"}, 400)
-
+    ride_post_id = __get_id(request)
     ride_post_service.delete_ride_post(ride_post_id)
     return ("", 204)
 
@@ -117,13 +119,7 @@ def get_trail_angels():
 
 @app.route("/trailangel")
 def get_trail_angel_by_id():
-
-    angel_id = None
-    try:
-        angel_id = request.args["id"]
-    except Exception:
-        return jsonify("Missing id")
-
+    angel_id = __get_id(request)
     angel = trail_angel_service.get_trail_angel(angel_id)
     return jsonify(angel.__dict__)
 

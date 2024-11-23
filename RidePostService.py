@@ -4,6 +4,7 @@ from TrailAngelService import TrailAngelService
 from UserType import UserType
 from data.database import Database
 from datetime import datetime
+from werkzeug.exceptions import NotFound 
 
 class RidePostService:
 
@@ -28,12 +29,12 @@ class RidePostService:
     def get_ride_post(self, ride_post_id):
         row = self.db.get_ride_post(ride_post_id)
         if not row:
-            raise Exception(f"Ride Post Id [{ride_post_id}] Not Found")
+            raise NotFound(f"Ride Post Id [{ride_post_id}] Not Found")
         post = self.__ride_post_from_row(row)
         return post
 
     def delete_ride_post(self, ride_post_id):
-        existing_ride_post = self.db.get_ride_post(ride_post_id)
+        existing_ride_post = self.db.get_general_post(ride_post_id)
         if not existing_ride_post:
             print(f"Attempted to delete nonexistent ride post [{ride_post_id}]")
             return

@@ -1,3 +1,4 @@
+from werkzeug.exceptions import NotFound
 from Hiker import Hiker
 from data.database import Database
 
@@ -19,7 +20,7 @@ class HikerService:
     def get_hiker(self, hiker_id):
         row = self.db.get_hiker(hiker_id)
         if not row:
-            raise Exception(f"Hiker Id [{hiker_id}] Not Found")
+            raise NotFound(f"Hiker Id [{hiker_id}] Not Found")
         hiker = self.hiker_from_row(row)
         return hiker
 

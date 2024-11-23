@@ -1,3 +1,4 @@
+from werkzeug.exceptions import NotFound
 from TrailAngelFactory import TrailAngelFactory
 
 class TrailAngelService:
@@ -14,7 +15,7 @@ class TrailAngelService:
     def get_trail_angel(self, trail_angel_id):
         row = self.db.get_trail_angel(trail_angel_id)
         if not row:
-            raise Exception(f"Trail Angel Id [{trail_angel_id}] Not Found")
+            raise NotFound(f"Trail Angel Id [{trail_angel_id}] Not Found")
         trail_angel = TrailAngelFactory().trail_angel_from_row(row)
         return trail_angel
 
