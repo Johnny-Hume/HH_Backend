@@ -1,4 +1,4 @@
-from TrailAngel import TrailAngel
+from domain.TrailAngel import TrailAngel
 
 
 class TrailAngelFactory:

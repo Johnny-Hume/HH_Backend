@@ -1,6 +1,4 @@
 from flask import jsonify
-from TrailAngel import TrailAngel
-
 
 class Utils:
 

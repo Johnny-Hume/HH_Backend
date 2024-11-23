@@ -7,14 +7,14 @@ import traceback
 
 import werkzeug
 from Utils import Utils
-from TrailAngel import TrailAngel
-from Hiker import Hiker
+from domain.TrailAngel import TrailAngel
+from domain.Hiker import Hiker
 from TrailAngelService import TrailAngelService
 from HikerService import HikerService
 from data.database import Database
-from RidePost import RidePost
+from domain.RidePost import RidePost
 from RidePostService import RidePostService
-from GeneralPost import GeneralPost
+from domain.GeneralPost import GeneralPost
 from GeneralPostService import GeneralPostService
 from PostService import PostService
 from werkzeug import exceptions

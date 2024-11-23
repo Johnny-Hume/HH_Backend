@@ -1,4 +1,4 @@
-from UserType import UserType
+from domain.UserType import UserType
 
 class Post:
 

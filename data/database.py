@@ -1,7 +1,7 @@
 import sqlite3
 from uuid import uuid4
-from RidePost import RidePost
-from GeneralPost import GeneralPost
+from domain.RidePost import RidePost
+from domain.GeneralPost import GeneralPost
 
 class Database:
 

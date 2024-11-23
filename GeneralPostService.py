@@ -1,6 +1,6 @@
 from werkzeug.exceptions import NotFound
 from data.database import Database
-from GeneralPost import GeneralPost
+from domain.GeneralPost import GeneralPost
 from datetime import datetime
 
 class GeneralPostService:

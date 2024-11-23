@@ -1,5 +1,5 @@
-from UserType import UserType
-from Post import Post
+from domain.UserType import UserType
+from domain.Post import Post
 
 class RidePost(Post):
 
