@@ -1,2 +1,2 @@
 # hiker_helper
-A website to help hikers get around wildfires
+Backend for Hiker Helper, a webapp aimed at helping Thru Hikers to navigate wildfires.
