@@ -18,7 +18,7 @@ from service.ride_post_service import RidePostService
 from domain.general_post import GeneralPost
 from service.general_post_service import GeneralPostService
 from service.post_service import PostService
-from werkzeug import exceptions
+from werkzeug.exceptions import BadRequest, NotFound
 
 utils = Utils()
 app = Flask(__name__)
@@ -29,12 +29,12 @@ def handle(e):
     print(traceback.format_exc())
     return "Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR
 
-@app.errorhandler(exceptions.BadRequest)
+@app.errorhandler(BadRequest)
 def handlebr(e):
     print(traceback.format_exc())
     return {"Message": e.description}, HTTPStatus.BAD_REQUEST
 
-@app.errorhandler(exceptions.NotFound)
+@app.errorhandler(NotFound)
 def handlenf(e):
     print(traceback.format_exc())
     return {"Message": e.description}, HTTPStatus.NOT_FOUND
@@ -107,6 +107,10 @@ def get_hikers():
     hikers = hiker_service.get_all_hikers()
     return utils.jsonify_list(hikers)
 
+@app.route("/hiker")
+def get_hiker():
+    id = __get_id(request)
+    return hiker_service.get_hiker(id).__dict__, 200
 
 # ===== TRAIL ANGELS =====
 
