@@ -11,6 +11,7 @@ class Database:
         self.hikers_table = "hikers"
         self.ride_posts_table = "ride_posts"
         self.general_posts_table = "general_posts"
+        self.comments_table = "comments"
         self.id_delimiter = ":"
 
     def setup(self):
@@ -63,6 +64,14 @@ class Database:
     def get_trail_angel(self, id):
         return self.__get_row_by_id(id, self.trail_angels_table)
 
+    # ===== COMMENTS =====
+    def save_comment(self, comment):
+        return self.__save_row(self.comments_table, comment)
+
+    def get_comments_for_post(self, id):
+        get_sql = f"""SELECT * FROM {self.comments_table} WHERE post_id=?"""
+        return self.__execute_with_values(get_sql, (id,))
+
     def __create_tables(self):
         trail_angels_sql = f"""CREATE TABLE IF NOT EXISTS {self.trail_angels_table}(
             id TEXT PRIMARY KEY NOT NULL,
@@ -84,7 +93,7 @@ class Database:
         ride_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.ride_posts_table}(
             id TEXT PRIMARY KEY NOT NULL,
             created_at TEXT NOT NULL,
-            user_id INTEGER,
+            user_id TEXT,
             user_type TEXT,
             title TEXT NOT NULL,
             pickup TEXT NOT NULL,
@@ -97,9 +106,18 @@ class Database:
         general_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.general_posts_table}(
             id TEXT PRIMARY KEY NOT NULL,
             created_at TEXT NOT NULL,
-            user_id INTEGER,
+            user_id TEXT,
             user_type TEXT,
             title TEXT NOT NULL,
+            text TEXT NOT NULL
+        )
+        """
+
+        comments_sql = f"""CREATE TABLE IF NOT EXISTS {self.comments_table}(
+            id TEXT PRIMARY KEY NOT NULL,
+            created_at TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            post_id TEXT NOT NULL,
             text TEXT NOT NULL
         )
         """
@@ -108,7 +126,7 @@ class Database:
         self.__execute(hikers_sql)
         self.__execute(ride_posts_sql)
         self.__execute(general_posts_sql)
-
+        self.__execute(comments_sql)
 
     def __get_row_by_id(self, id, table_name):
         sql = f"SELECT * FROM {table_name} WHERE id=?"
@@ -143,7 +161,7 @@ class Database:
                      ({keys_str}) 
                      VALUES({values_holders}) 
                      RETURNING *"""
-        row = self.__execute_with_values(insert_sql, values)
+        row = self.__execute_with_values(insert_sql, values)[0]
         return row
 
 
@@ -164,6 +182,6 @@ class Database:
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(sql, values)
-            row = cursor.fetchone()
+            rows = cursor.fetchall()
             conn.commit()
-            return row
+            return rows

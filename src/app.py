@@ -5,6 +5,8 @@ from flask_cors import CORS
 import os
 import traceback
 
+from domain.comment import Comment
+from service.comment_service import CommentService
 from utils import Utils
 from domain.trail_angel import TrailAngel
 from domain.hiker import Hiker
@@ -135,6 +137,21 @@ def __get_id(request):
     except Exception:
         raise exceptions.BadRequest("Missing [id]")
 
+# ===== COMMENTS =====
+@app.post("/comment")
+def create_comment():
+    json = request.get_json()
+    created_comment = comment_service.create_comment(Comment(**json))
+    return created_comment.__dict__, 201
+
+@app.route("/comments")
+def get_comments():
+    post_id = request.args.get("post_id")
+    if not post_id:
+        raise BadRequest("Missing post_id in URL")
+    comments = comment_service.get_comments_for_post(post_id)
+    return utils.jsonify_list(comments)
+
 if __name__ == "__main__":
     db = Database("data/hiker_helper.db")
 
@@ -143,7 +160,16 @@ if __name__ == "__main__":
 
     ride_post_service = RidePostService(db)
     general_post_service = GeneralPostService(db)
-    post_service = PostService(ride_post_service, general_post_service)
+    post_service = PostService(db, ride_post_service, general_post_service)
+
+    comment_service = CommentService(
+        db,
+        hiker_service,
+        trail_angel_service,
+        ride_post_service,
+        general_post_service,
+        post_service
+    )
 
     db.setup()
     port = int(os.environ.get('PORT', 5000))
