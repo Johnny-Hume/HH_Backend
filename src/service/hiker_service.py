@@ -1,5 +1,5 @@
 from werkzeug.exceptions import NotFound
-from domain.Hiker import Hiker
+from domain.hiker import Hiker
 from data.database import Database
 
 

@@ -1,5 +1,5 @@
 from werkzeug.exceptions import NotFound
-from domain.TrailAngel import TrailAngel
+from domain.trail_angel import TrailAngel
 
 class TrailAngelService:
 

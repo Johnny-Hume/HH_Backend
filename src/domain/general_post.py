@@ -1,5 +1,5 @@
-from domain.UserType import UserType
-from domain.Post import Post
+from domain.user_type import UserType
+from domain.post import Post
 
 class GeneralPost(Post):
 
