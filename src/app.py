@@ -166,7 +166,7 @@ def get_user():
 @app.post("/user_names")
 def get_user_names():
     ids = request.get_json().get("ids")
-    if not ids:
+    if ids == None:
         raise BadRequest("Missing ids in request body")
     return user_service.get_users_names(ids)
 
