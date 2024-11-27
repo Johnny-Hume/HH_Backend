@@ -163,6 +163,14 @@ def get_user():
     id = __get_id(request)
     return user_service.get_user(id).__dict__, 200
 
+@app.post("/user_names")
+def get_user_names():
+    ids = request.get_json().get("ids")
+    if not ids:
+        raise BadRequest("Missing ids in request body")
+    return user_service.get_users_names(ids)
+
+
 if __name__ == "__main__":
     db = Database("data/hiker_helper.db")
 
