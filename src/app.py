@@ -7,6 +7,7 @@ import traceback
 
 from domain.comment import Comment
 from service.comment_service import CommentService
+from service.user_service import UserService
 from utils import Utils
 from domain.trail_angel import TrailAngel
 from domain.hiker import Hiker
@@ -156,6 +157,12 @@ def get_comments():
     comments = comment_service.get_comments_for_post(post_id)
     return utils.jsonify_list(comments)
 
+# ===== USERS =====
+@app.route("/user")
+def get_user():
+    id = __get_id(request)
+    return user_service.get_user(id).__dict__, 200
+
 if __name__ == "__main__":
     db = Database("data/hiker_helper.db")
 
@@ -173,6 +180,12 @@ if __name__ == "__main__":
         ride_post_service,
         general_post_service,
         post_service
+    )
+
+    user_service = UserService(
+            db,
+            trail_angel_service,
+            hiker_service
     )
 
     db.setup()
