@@ -9,6 +9,7 @@ from service.trail_angel_service import TrailAngelService
 from service.general_post_service import GeneralPostService
 from datetime import datetime
 
+
 class CommentService:
 
     def __init__(
@@ -74,4 +75,3 @@ class CommentService:
             raise NotFound(f"[{id} Not Found]")
 
         return entity
-

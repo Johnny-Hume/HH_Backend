@@ -4,7 +4,8 @@ from service.trail_angel_service import TrailAngelService
 from domain.user_type import UserType
 from data.database import Database
 from datetime import datetime
-from werkzeug.exceptions import NotFound 
+from werkzeug.exceptions import NotFound
+
 
 class RidePostService:
 
@@ -22,7 +23,7 @@ class RidePostService:
 
         return self.__ride_post_from_row(row)
 
-    def get_ride_posts(self): 
+    def get_ride_posts(self):
         rows = self.db.get_ride_posts()
         return self.__ride_posts_from_rows(rows)
 
@@ -36,7 +37,8 @@ class RidePostService:
     def delete_ride_post(self, ride_post_id):
         existing_ride_post = self.db.get_general_post(ride_post_id)
         if not existing_ride_post:
-            print(f"Attempted to delete nonexistent ride post [{ride_post_id}]")
+            print(
+                f"Attempted to delete nonexistent ride post [{ride_post_id}]")
             return
         self.db.delete_ride_post(ride_post_id)
 
@@ -48,23 +50,19 @@ class RidePostService:
 
     def __ride_post_from_row(self, row):
         id, created_at, *args = row
-        return RidePost(*args, id = id, created_at=created_at)
+        return RidePost(*args, id=id, created_at=created_at)
 
     def __validate_user(self, ride_post):
         user = None
         user_type = UserType(ride_post.user_type)
 
-        if(user_type == UserType.HIKER):
+        if (user_type == UserType.HIKER):
             user = HikerService(self.db).get_hiker(ride_post.user_id)
-        elif(user_type == UserType.TRAILANGEL):
-            user = TrailAngelService(self.db).get_trail_angel(ride_post.user_id)
+        elif (user_type == UserType.TRAILANGEL):
+            user = TrailAngelService(
+                self.db).get_trail_angel(ride_post.user_id)
         else:
             raise Exception(f"User Type [{ride_post.user_type}] Undefined")
 
         if not user:
             raise Exception("Problem validating user creating post")
-
-
-
-
-

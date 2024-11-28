@@ -1,6 +1,7 @@
 from werkzeug.exceptions import NotFound
 from domain.trail_angel import TrailAngel
 
+
 class TrailAngelService:
 
     def __init__(self, db) -> None:

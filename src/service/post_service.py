@@ -5,6 +5,7 @@ from service.general_post_service import GeneralPostService
 from domain.general_post import GeneralPost
 from domain.ride_post import RidePost
 
+
 class PostService:
 
     def __init__(self, db: Database, rps: RidePostService, gps: GeneralPostService) -> None:
@@ -36,4 +37,3 @@ class PostService:
             raise NotFound(f"Post [{id}] Not Found")
 
         return post
-

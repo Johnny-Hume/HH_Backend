@@ -4,6 +4,8 @@ from service.trail_angel_service import TrailAngelService
 from service.hiker_service import HikerService
 from domain.hiker import Hiker
 from domain.trail_angel import TrailAngel
+
+
 class UserService:
 
     def __init__(
@@ -41,7 +43,7 @@ class UserService:
 
     def __get_user_from_table(self, user_id: str):
         table = user_id.split(self.db.id_delimiter)[0]
-        
+
         if table == self.db.hikers_table:
             return self.hiker_service.get_hiker(user_id)
         elif table == self.db.trail_angels_table:

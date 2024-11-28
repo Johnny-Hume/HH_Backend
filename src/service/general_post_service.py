@@ -3,6 +3,7 @@ from data.database import Database
 from domain.general_post import GeneralPost
 from datetime import datetime
 
+
 class GeneralPostService:
 
     def __init__(self, db: Database) -> None:

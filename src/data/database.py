@@ -3,6 +3,7 @@ from uuid import uuid4
 from domain.ride_post import RidePost
 from domain.general_post import GeneralPost
 
+
 class Database:
 
     def __init__(self, database_name: str) -> None:
@@ -163,8 +164,6 @@ class Database:
                      RETURNING *"""
         row = self.__execute_with_values(insert_sql, values)[0]
         return row
-
-
 
     def __fetch_all(self, table: str):
         sql = f"SELECT * FROM {table} WHERE 1"

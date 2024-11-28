@@ -1,14 +1,15 @@
 from domain.user_type import UserType
 
+
 class Post:
 
     def __init__(
             self,
             title: str,
-            user_id : str,
+            user_id: str,
             user_type: UserType,
-            id = None,
-            created_at = None
+            id=None,
+            created_at=None
     ) -> None:
         self.id = id
         self.created_at = created_at

@@ -25,15 +25,18 @@ utils = Utils()
 app = Flask(__name__)
 CORS(app)
 
+
 @app.errorhandler(Exception)
 def handle(e):
     print(traceback.format_exc())
     return "Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR
 
+
 @app.errorhandler(BadRequest)
 def handlebr(e):
     print(traceback.format_exc())
     return {"Message": e.description}, HTTPStatus.BAD_REQUEST
+
 
 @app.errorhandler(NotFound)
 def handlenf(e):
@@ -42,6 +45,7 @@ def handlenf(e):
 
 # ===== GENERALPOSTS =====
 
+
 @app.post("/general_post")
 def create_general_post():
     json = request.get_json()
@@ -49,10 +53,12 @@ def create_general_post():
     created_post = general_post_service.create_general_post(parsed_post)
     return created_post.__dict__, HTTPStatus.CREATED
 
+
 @app.route("/general_posts")
 def get_general_posts():
     general_posts = general_post_service.get_general_posts()
     return utils.jsonify_list(general_posts)
+
 
 @app.route("/general_post")
 def get_general_post():
@@ -63,6 +69,7 @@ def get_general_post():
 
 # ===== RIDE POSTS =====
 
+
 @app.post("/ride_post")
 def create_ride_post():
     json = request.get_json()
@@ -70,16 +77,19 @@ def create_ride_post():
     created_ride_post = ride_post_service.create_ride_post(parsed_ride_post)
     return created_ride_post.__dict__, HTTPStatus.CREATED
 
+
 @app.route("/ride_posts")
 def get_ride_posts():
     ride_posts = ride_post_service.get_ride_posts()
     return utils.jsonify_list(ride_posts)
+
 
 @app.route("/ride_post")
 def get_ride_post():
     ride_post_id = __get_id(request)
     ride_post = ride_post_service.get_ride_post(ride_post_id)
     return jsonify(ride_post.__dict__)
+
 
 @app.delete("/ride_post")
 def delete_ride_post():
@@ -88,12 +98,15 @@ def delete_ride_post():
     return ("", 204)
 
 # ===== POSTS =====
+
+
 @app.route("/posts")
 def get_all_posts():
     posts = post_service.get_all_posts()
     return utils.jsonify_list(posts)
 
 # ===== HIKERS =====
+
 
 @app.post("/hiker")
 def create_hiker():
@@ -107,6 +120,7 @@ def create_hiker():
 def get_hikers():
     hikers = hiker_service.get_all_hikers()
     return utils.jsonify_list(hikers)
+
 
 @app.route("/hiker")
 def get_hiker():
@@ -136,6 +150,7 @@ def create_trail_angel():
     created_angel = trail_angel_service.create_trail_angel(TrailAngel(**json))
     return jsonify(created_angel.__dict__)
 
+
 def __get_id(request):
     try:
         return request.args["id"]
@@ -143,11 +158,14 @@ def __get_id(request):
         raise exceptions.BadRequest("Missing [id]")
 
 # ===== COMMENTS =====
+
+
 @app.post("/comment")
 def create_comment():
     json = request.get_json()
     created_comment = comment_service.create_comment(Comment(**json))
     return created_comment.__dict__, 201
+
 
 @app.route("/comments")
 def get_comments():
@@ -158,10 +176,13 @@ def get_comments():
     return utils.jsonify_list(comments)
 
 # ===== USERS =====
+
+
 @app.route("/user")
 def get_user():
     id = __get_id(request)
     return user_service.get_user(id).__dict__, 200
+
 
 @app.post("/user_names")
 def get_user_names():
@@ -191,9 +212,9 @@ if __name__ == "__main__":
     )
 
     user_service = UserService(
-            db,
-            trail_angel_service,
-            hiker_service
+        db,
+        trail_angel_service,
+        hiker_service
     )
 
     db.setup()
