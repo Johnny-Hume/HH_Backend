@@ -2,4 +2,4 @@ venv/
 
 __pycache__/
 
-data/hiker_helper.db
+src/data/hiker_helper.db
