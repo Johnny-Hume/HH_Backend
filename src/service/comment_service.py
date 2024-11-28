@@ -44,6 +44,7 @@ class CommentService:
         comments = []
         for row in rows:
             comments.append(self.__comment_from_row(row))
+        comments.sort(key=lambda x: x.created_at)
         return comments
 
     def __comment_from_row(self, row) -> Comment:
