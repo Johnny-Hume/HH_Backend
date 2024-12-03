@@ -5,6 +5,7 @@ from flask_cors import CORS
 import os
 import traceback
 
+from auth import auth_service
 from domain.comment import Comment
 from service.comment_service import CommentService
 from service.user_service import UserService
@@ -19,6 +20,8 @@ from service.ride_post_service import RidePostService
 from domain.general_post import GeneralPost
 from service.general_post_service import GeneralPostService
 from service.post_service import PostService
+from auth.auth_service import AuthService
+from domain.login import Login
 from werkzeug.exceptions import BadRequest, NotFound
 
 utils = Utils()
@@ -42,6 +45,17 @@ def handlebr(e):
 def handlenf(e):
     print(traceback.format_exc())
     return {"Message": e.description}, HTTPStatus.NOT_FOUND
+
+# ===== AUTH =====
+
+
+@app.post("/login")
+def login():
+    json = request.get_json()
+    parsed_login = Login(**json)
+    session = auth_service.login_user(parsed_login)
+
+    return {"session_id": session.id}, HTTPStatus.OK
 
 # ===== GENERALPOSTS =====
 
@@ -216,6 +230,8 @@ if __name__ == "__main__":
         trail_angel_service,
         hiker_service
     )
+
+    auth_service = AuthService(db)
 
     db.setup()
     port = int(os.environ.get('PORT', 5000))

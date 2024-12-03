@@ -2,6 +2,7 @@ import sqlite3
 from uuid import uuid4
 from domain.ride_post import RidePost
 from domain.general_post import GeneralPost
+from domain.session import Session
 
 
 class Database:
@@ -13,13 +14,23 @@ class Database:
         self.ride_posts_table = "ride_posts"
         self.general_posts_table = "general_posts"
         self.comments_table = "comments"
+        self.logins_table = "logins"
+        self.sessions_table = "sessions"
         self.id_delimiter = ":"
 
     def setup(self):
         self.__execute("PRAGMA foreign_keys = ON")
         self.__create_tables()
 
+    # ===== LOGIN =====
+    def get_login_for_user(self, user_name):
+        return self.__get_row_by_field(user_name, self.logins_table, "user_name")
+
+    def save_session(self, session: Session):
+        return self.__save_row(self.sessions_table, session)
+
     # ===== GENERAL POSTS =====
+
     def save_general_post(self, general_post: GeneralPost):
         return self.__save_row(self.general_posts_table, general_post)
 
@@ -123,11 +134,29 @@ class Database:
         )
         """
 
+        logins_sql = f"""CREATE TABLE IF NOT EXISTS {self.logins_table}(
+            id TEXT PRIMARY KEY NOT NULL,
+            created_at TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            user_name TEXT NOT NULL,
+            password TEXT NOT NULL
+        )
+        """
+
+        sessions_sql = f"""CREATE TABLE IF NOT EXISTS {self.sessions_table}(
+            id TEXT PRIMARY KEY NOT NULL,
+            created_at TEXT NOT NULL,
+            user_id TEXT NOT NULL
+        )
+        """
+
         self.__execute(trail_angels_sql)
         self.__execute(hikers_sql)
         self.__execute(ride_posts_sql)
         self.__execute(general_posts_sql)
         self.__execute(comments_sql)
+        self.__execute(logins_sql)
+        self.__execute(sessions_sql)
 
     def __get_row_by_field(self, id, table_name, field):
         sql = f"SELECT * FROM {table_name} WHERE {field}=?"
