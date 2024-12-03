@@ -27,7 +27,7 @@ class Database:
         return self.__fetch_all(self.general_posts_table)
 
     def get_general_post(self, id):
-        return self.__get_row_by_id(id, self.general_posts_table)
+        return self.__get_row_by_field(id, self.general_posts_table, "id")
 
     # ===== RIDE POSTS =====
     def save_ride_post(self, ride_post: RidePost):
@@ -38,7 +38,7 @@ class Database:
         return self.__fetch_all(self.ride_posts_table)
 
     def get_ride_post(self, id):
-        return self.__get_row_by_id(id, self.ride_posts_table)
+        return self.__get_row_by_field(id, self.ride_posts_table, "id")
 
     def delete_ride_post(self, id):
         sql = f"DELETE FROM {self.ride_posts_table} WHERE id=?"
@@ -49,7 +49,7 @@ class Database:
         return self.__fetch_all(self.hikers_table)
 
     def get_hiker(self, id):
-        return self.__get_row_by_id(id, self.hikers_table)
+        return self.__get_row_by_field(id, self.hikers_table, "id")
 
     def save_hiker(self, hiker):
         return self.__save_row(self.hikers_table, hiker)
@@ -63,7 +63,7 @@ class Database:
         return self.__fetch_all(self.trail_angels_table)
 
     def get_trail_angel(self, id):
-        return self.__get_row_by_id(id, self.trail_angels_table)
+        return self.__get_row_by_field(id, self.trail_angels_table, "id")
 
     # ===== COMMENTS =====
     def save_comment(self, comment):
@@ -129,8 +129,8 @@ class Database:
         self.__execute(general_posts_sql)
         self.__execute(comments_sql)
 
-    def __get_row_by_id(self, id, table_name):
-        sql = f"SELECT * FROM {table_name} WHERE id=?"
+    def __get_row_by_field(self, id, table_name, field):
+        sql = f"SELECT * FROM {table_name} WHERE {field}=?"
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(sql, (id,))
