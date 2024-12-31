@@ -14,10 +14,7 @@ from domain.hiker import Hiker
 from service.trail_angel_service import TrailAngelService
 from service.hiker_service import HikerService
 from data.database import Database
-from domain.ride_post import RidePost
-from service.ride_post_service import RidePostService
-from domain.general_post import GeneralPost
-from service.general_post_service import GeneralPostService
+from domain.post import Post
 from service.post_service import PostService
 from werkzeug.exceptions import BadRequest, NotFound
 
@@ -43,67 +40,30 @@ def handlenf(e):
     print(traceback.format_exc())
     return {"Message": e.description}, HTTPStatus.NOT_FOUND
 
-# ===== GENERALPOSTS =====
-
-
-@app.post("/general_post")
-def create_general_post():
-    json = request.get_json()
-    parsed_post = GeneralPost(**json)
-    created_post = general_post_service.create_general_post(parsed_post)
-    return created_post.__dict__, HTTPStatus.CREATED
-
-
-@app.route("/general_posts")
-def get_general_posts():
-    general_posts = general_post_service.get_general_posts()
-    return utils.jsonify_list(general_posts)
-
-
-@app.route("/general_post")
-def get_general_post():
-    general_post_id = __get_id(request)
-
-    general_post = general_post_service.get_general_post(general_post_id)
-    return jsonify(general_post.__dict__)
-
-# ===== RIDE POSTS =====
-
-
-@app.post("/ride_post")
-def create_ride_post():
-    json = request.get_json()
-    parsed_ride_post = RidePost(**json)
-    created_ride_post = ride_post_service.create_ride_post(parsed_ride_post)
-    return created_ride_post.__dict__, HTTPStatus.CREATED
-
-
-@app.route("/ride_posts")
-def get_ride_posts():
-    ride_posts = ride_post_service.get_ride_posts()
-    return utils.jsonify_list(ride_posts)
-
-
-@app.route("/ride_post")
-def get_ride_post():
-    ride_post_id = __get_id(request)
-    ride_post = ride_post_service.get_ride_post(ride_post_id)
-    return jsonify(ride_post.__dict__)
-
-
-@app.delete("/ride_post")
-def delete_ride_post():
-    ride_post_id = __get_id(request)
-    ride_post_service.delete_ride_post(ride_post_id)
-    return ("", 204)
-
 # ===== POSTS =====
 
 
+@app.post("/post")
+def create_post():
+    json = request.get_json()
+    parsed_post = Post.from_json(json)
+    created_post = post_service.create_post(parsed_post)
+    return created_post.__dict__, HTTPStatus.CREATED
+
+
 @app.route("/posts")
-def get_all_posts():
-    posts = post_service.get_all_posts()
+def get_posts():
+    posts = post_service.get_posts()
     return utils.jsonify_list(posts)
+
+
+@app.route("/post")
+def get_post():
+    post_id = __get_id(request)
+
+    post = post_service.get_post(post_id)
+    return jsonify(post.__dict__)
+
 
 # ===== HIKERS =====
 
@@ -155,7 +115,7 @@ def __get_id(request):
     try:
         return request.args["id"]
     except Exception:
-        raise exceptions.BadRequest("Missing [id]")
+        raise BadRequest("Missing [id]")
 
 # ===== COMMENTS =====
 
@@ -198,16 +158,12 @@ if __name__ == "__main__":
     trail_angel_service = TrailAngelService(db)
     hiker_service = HikerService(db)
 
-    ride_post_service = RidePostService(db)
-    general_post_service = GeneralPostService(db)
-    post_service = PostService(db, ride_post_service, general_post_service)
+    post_service = PostService(db)
 
     comment_service = CommentService(
         db,
         hiker_service,
         trail_angel_service,
-        ride_post_service,
-        general_post_service,
         post_service
     )
 

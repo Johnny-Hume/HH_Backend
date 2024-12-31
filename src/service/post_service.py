@@ -1,39 +1,36 @@
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import NotFound
 from data.database import Database
-from service.ride_post_service import RidePostService
-from service.general_post_service import GeneralPostService
-from domain.general_post import GeneralPost
-from domain.ride_post import RidePost
+from domain.post import Post
+from datetime import datetime
 
 
 class PostService:
 
-    def __init__(self, db: Database, rps: RidePostService, gps: GeneralPostService) -> None:
+    def __init__(self, db: Database) -> None:
         self.db = db
-        self.ride_service = rps
-        self.general_service = gps
 
-    def get_all_posts(self):
-        ride_posts = self.ride_service.get_ride_posts()
-        general_posts = self.general_service.get_general_posts()
+    def get_posts(self):
+        rows = self.db.get_posts()
+        posts = []
+        for row in rows:
+            posts.append(self.__post_from_row(row))
+        posts.sort(key=lambda post: post.created_at)
+        return posts
 
-        merged = ride_posts + general_posts
-        merged.sort(key=lambda post: post.created_at)
-        return merged
-
-    def get_post(self, id) -> RidePost | GeneralPost:
-
-        table_name = id.split(self.db.id_delimiter)[0]
-
-        post = None
-        if table_name == self.db.ride_posts_table:
-            post = self.ride_service.get_ride_post(id)
-        elif table_name == self.db.general_posts_table:
-            post = self.general_service.get_general_post(id)
-        else:
-            raise BadRequest(f"Invalid PostId [{id}]")
-
-        if not post:
-            raise NotFound(f"Post [{id}] Not Found")
-
+    def get_post(self, post_id):
+        row = self.db.get_post(post_id)
+        if not row:
+            raise NotFound(f"Post [{post_id}] Not Found")
+        post = self.__post_from_row(row)
         return post
+
+    def create_post(self, post: Post):
+
+        now = datetime.now()
+        post.created_at = str(now)
+
+        row = self.db.save_post(post)
+        return self.__post_from_row(row)
+
+    def __post_from_row(self, row: list):
+        return Post(*row)

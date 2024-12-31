@@ -1,18 +1,22 @@
 from domain.user_type import UserType
+from dataclasses import dataclass
 
 
+@dataclass
 class Post:
 
-    def __init__(
-            self,
-            title: str,
-            user_id: str,
-            user_type: UserType,
-            id=None,
-            created_at=None
-    ) -> None:
-        self.id = id
-        self.created_at = created_at
-        self.user_id = user_id
-        self.user_type = user_type
-        self.title = title
+    id: str | None
+    created_at: str | None
+    user_id: str
+    user_type: UserType
+    title: str
+    text: str
+
+    @classmethod
+    def from_json(cls, json: dict):
+
+        print(json)
+        id = json.get("id")
+        created_at = json.get("created_at")
+
+        return Post(id, created_at, **json)

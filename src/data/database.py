@@ -1,7 +1,6 @@
 import sqlite3
 from uuid import uuid4
-from domain.ride_post import RidePost
-from domain.general_post import GeneralPost
+from domain.post import Post
 
 
 class Database:
@@ -10,8 +9,7 @@ class Database:
         self.db_name = database_name
         self.trail_angels_table = "trailangels"
         self.hikers_table = "hikers"
-        self.ride_posts_table = "ride_posts"
-        self.general_posts_table = "general_posts"
+        self.posts_table = "posts"
         self.comments_table = "comments"
         self.id_delimiter = ":"
 
@@ -19,30 +17,15 @@ class Database:
         self.__execute("PRAGMA foreign_keys = ON")
         self.__create_tables()
 
-    # ===== GENERAL POSTS =====
-    def save_general_post(self, general_post: GeneralPost):
-        return self.__save_row(self.general_posts_table, general_post)
+    # ===== POSTS =====
+    def save_post(self, post: Post):
+        return self.__save_row(self.posts_table, post)
 
-    def get_general_posts(self):
-        return self.__fetch_all(self.general_posts_table)
+    def get_posts(self):
+        return self.__fetch_all(self.posts_table)
 
-    def get_general_post(self, id):
-        return self.__get_row_by_field(id, self.general_posts_table, "id")
-
-    # ===== RIDE POSTS =====
-    def save_ride_post(self, ride_post: RidePost):
-        row = self.__save_row(self.ride_posts_table, ride_post)
-        return row
-
-    def get_ride_posts(self):
-        return self.__fetch_all(self.ride_posts_table)
-
-    def get_ride_post(self, id):
-        return self.__get_row_by_field(id, self.ride_posts_table, "id")
-
-    def delete_ride_post(self, id):
-        sql = f"DELETE FROM {self.ride_posts_table} WHERE id=?"
-        self.__execute_with_values(sql, (id,))
+    def get_post(self, id):
+        return self.__get_row_by_field(id, self.posts_table, "id")
 
     # ===== HIKERS =====
     def get_hikers(self):
@@ -91,20 +74,7 @@ class Database:
         )
         """
 
-        ride_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.ride_posts_table}(
-            id TEXT PRIMARY KEY NOT NULL,
-            created_at TEXT NOT NULL,
-            user_id TEXT,
-            user_type TEXT,
-            title TEXT NOT NULL,
-            pickup TEXT NOT NULL,
-            dropoff TEXT NOT NULL,
-            date TEXT NOT NULL,
-            num_passengers INTEGER
-        )
-        """
-
-        general_posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.general_posts_table}(
+        posts_sql = f"""CREATE TABLE IF NOT EXISTS {self.posts_table}(
             id TEXT PRIMARY KEY NOT NULL,
             created_at TEXT NOT NULL,
             user_id TEXT,
@@ -125,8 +95,7 @@ class Database:
 
         self.__execute(trail_angels_sql)
         self.__execute(hikers_sql)
-        self.__execute(ride_posts_sql)
-        self.__execute(general_posts_sql)
+        self.__execute(posts_sql)
         self.__execute(comments_sql)
 
     def __get_row_by_field(self, id, table_name, field):

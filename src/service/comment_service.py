@@ -3,10 +3,8 @@ from data.database import Database
 from domain.comment import Comment
 from data.database import Database
 from service.hiker_service import HikerService
-from service.post_service import PostService
-from service.ride_post_service import RidePostService
 from service.trail_angel_service import TrailAngelService
-from service.general_post_service import GeneralPostService
+from service.post_service import PostService
 from datetime import datetime
 
 
@@ -17,15 +15,11 @@ class CommentService:
         db: Database,
         hiker_service: HikerService,
         trail_angel_service: TrailAngelService,
-        ride_post_service: RidePostService,
-        general_post_service: GeneralPostService,
         post_service: PostService
     ) -> None:
         self.db = db
         self.hiker_service = hiker_service
         self.trail_angel_service = trail_angel_service
-        self.ride_post_service = ride_post_service
-        self.general_post_service = general_post_service
         self.post_service = post_service
 
     def create_comment(self, comment: Comment) -> Comment:
