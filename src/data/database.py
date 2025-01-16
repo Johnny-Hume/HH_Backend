@@ -7,8 +7,7 @@ class Database:
 
     def __init__(self, database_name: str) -> None:
         self.db_name = database_name
-        self.trail_angels_table = "trailangels"
-        self.hikers_table = "hikers"
+        self.users_table = "users"
         self.posts_table = "posts"
         self.comments_table = "comments"
         self.id_delimiter = ":"
@@ -27,26 +26,15 @@ class Database:
     def get_post(self, id):
         return self.__get_row_by_field(id, self.posts_table, "id")
 
-    # ===== HIKERS =====
-    def get_hikers(self):
-        return self.__fetch_all(self.hikers_table)
+    # ===== USERS =====
+    def get_users(self):
+        return self.__fetch_all(self.users_table)
 
-    def get_hiker(self, id):
-        return self.__get_row_by_field(id, self.hikers_table, "id")
+    def get_user(self, id):
+        return self.__get_row_by_field(id, self.users_table, "id")
 
-    def save_hiker(self, hiker):
-        return self.__save_row(self.hikers_table, hiker)
-
-    # ===== TRAIL ANGELS =====
-
-    def save_trail_angel(self, trail_angel):
-        return self.__save_row(self.trail_angels_table, trail_angel)
-
-    def get_trail_angels(self):
-        return self.__fetch_all(self.trail_angels_table)
-
-    def get_trail_angel(self, id):
-        return self.__get_row_by_field(id, self.trail_angels_table, "id")
+    def save_user(self, user):
+        return self.__save_row(self.users_table, user)
 
     # ===== COMMENTS =====
     def save_comment(self, comment):
@@ -57,17 +45,8 @@ class Database:
         return self.__execute_with_values(get_sql, (id,))
 
     def __create_tables(self):
-        trail_angels_sql = f"""CREATE TABLE IF NOT EXISTS {self.trail_angels_table}(
-            id TEXT PRIMARY KEY NOT NULL,
-            first_name TEXT NOT NULL,
-            last_name TEXT NOT NULL,
-            location TEXT NOT NULL,
-            capacity INTEGER NOT NULL,
-            cost INTEGER NOT NULL
-        )
-        """
 
-        hikers_sql = f"""CREATE TABLE IF NOT EXISTS {self.hikers_table}(
+        users_sql = f"""CREATE TABLE IF NOT EXISTS {self.users_table}(
             id TEXT PRIMARY KEY NOT NULL,
             trail_name TEXT NOT NULL,
             bio TEXT NOT NULL
@@ -78,7 +57,6 @@ class Database:
             id TEXT PRIMARY KEY NOT NULL,
             created_at TEXT NOT NULL,
             user_id TEXT,
-            user_type TEXT,
             title TEXT NOT NULL,
             text TEXT NOT NULL
         )
@@ -93,8 +71,7 @@ class Database:
         )
         """
 
-        self.__execute(trail_angels_sql)
-        self.__execute(hikers_sql)
+        self.__execute(users_sql)
         self.__execute(posts_sql)
         self.__execute(comments_sql)
 

@@ -1,4 +1,4 @@
-class Hiker:
+class User:
 
     def __init__(self, trail_name: str, bio: str, id=None) -> None:
         self.id = id
