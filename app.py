@@ -118,6 +118,7 @@ def get_comments():
 
 
 db = Database("data/hiker_helper.db")
+db.setup()
 
 user_service = UserService(db)
 
@@ -130,6 +131,5 @@ comment_service = CommentService(
 )
 
 if __name__ == "__main__":
-    db.setup()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
