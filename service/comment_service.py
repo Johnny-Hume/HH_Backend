@@ -1,7 +1,6 @@
 from werkzeug.exceptions import BadRequest, NotFound
 from data.database import Database
 from domain.comment import Comment
-from data.database import Database
 from service.user_service import UserService
 from service.post_service import PostService
 from datetime import datetime
