@@ -120,6 +120,7 @@ def get_comments():
 if __name__ == "__main__":
     db = Database("data/hiker_helper.db")
 
+    print("here")
     user_service = UserService(db)
 
     post_service = PostService(db)
