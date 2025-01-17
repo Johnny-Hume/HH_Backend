@@ -30,8 +30,8 @@ class PostService:
         post.created_at = str(now)
 
         row = self.db.save_post(post)
+        print(row)
         return self.__post_from_row(row)
 
     def __post_from_row(self, row: list):
-        print(row)
         return Post(*row)

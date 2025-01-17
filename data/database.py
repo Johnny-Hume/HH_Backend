@@ -18,6 +18,7 @@ class Database:
 
     # ===== POSTS =====
     def save_post(self, post: Post):
+        print(post)
         return self.__save_row(self.posts_table, post)
 
     def get_posts(self):
