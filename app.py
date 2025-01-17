@@ -117,20 +117,19 @@ def get_comments():
     return utils.jsonify_list(comments)
 
 
+db = Database("data/hiker_helper.db")
+
+user_service = UserService(db)
+
+post_service = PostService(db)
+
+comment_service = CommentService(
+    db,
+    user_service,
+    post_service
+)
+
 if __name__ == "__main__":
-    db = Database("data/hiker_helper.db")
-
-    print("here")
-    user_service = UserService(db)
-
-    post_service = PostService(db)
-
-    comment_service = CommentService(
-        db,
-        user_service,
-        post_service
-    )
-
     db.setup()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
