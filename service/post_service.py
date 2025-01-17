@@ -33,4 +33,5 @@ class PostService:
         return self.__post_from_row(row)
 
     def __post_from_row(self, row: list):
+        print(row)
         return Post(*row)
