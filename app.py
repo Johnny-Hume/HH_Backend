@@ -75,7 +75,7 @@ def create_user():
 
 @app.route("/users")
 def get_users():
-    users = UserService(Database("data/hiker_helper.db")).get_all_users()
+    users = user_service.get_all_users()
     return utils.jsonify_list(users)
 
 
