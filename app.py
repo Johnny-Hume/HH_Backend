@@ -6,13 +6,13 @@ import os
 import traceback
 
 from domain.comment import Comment
-from service.comment_service import CommentService
 from utils import Utils
 from domain.user import User
-from service.user_service import UserService
 from data.database import Database
 from domain.post import Post
 from service.post_service import PostService
+from service.comment_service import CommentService
+from service.user_service import UserService
 from werkzeug.exceptions import BadRequest, NotFound
 
 utils = Utils()
@@ -75,7 +75,7 @@ def create_user():
 
 @app.route("/users")
 def get_users():
-    users = user_service.get_all_users()
+    users = UserService(Database("data/hiker_helper.db")).get_all_users()
     return utils.jsonify_list(users)
 
 
