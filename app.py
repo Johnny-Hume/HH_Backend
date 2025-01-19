@@ -6,16 +6,13 @@ import os
 import traceback
 
 from domain.comment import Comment
-from service.comment_service import CommentService
-from service.user_service import UserService
 from utils import Utils
-from domain.trail_angel import TrailAngel
-from domain.hiker import Hiker
-from service.trail_angel_service import TrailAngelService
-from service.hiker_service import HikerService
+from domain.user import User
 from data.database import Database
 from domain.post import Post
 from service.post_service import PostService
+from service.comment_service import CommentService
+from service.user_service import UserService
 from werkzeug.exceptions import BadRequest, NotFound
 
 utils = Utils()
@@ -65,50 +62,35 @@ def get_post():
     return jsonify(post.__dict__)
 
 
-# ===== HIKERS =====
+# ===== USERS =====
 
 
-@app.post("/hiker")
-def create_hiker():
-    json = request.get_json()
-    parsed_hiker = Hiker.from_json(json)
-    created_hiker = hiker_service.create_hiker(parsed_hiker)
-    return jsonify(created_hiker), HTTPStatus.CREATED
+@app.post("/user")
+def create_user():
+    r_json = request.get_json()
+    parsed = User(**r_json)
+    created_user = user_service.create_user(parsed)
+    return jsonify(created_user.__dict__)
 
 
-@app.route("/hikers")
-def get_hikers():
-    hikers = hiker_service.get_all_hikers()
-    return utils.jsonify_list(hikers)
+@app.route("/users")
+def get_users():
+    users = user_service.get_all_users()
+    return utils.jsonify_list(users)
 
 
-@app.route("/hiker")
-def get_hiker():
+@app.route("/user")
+def get_user():
     id = __get_id(request)
-    return hiker_service.get_hiker(id).__dict__, 200
-
-# ===== TRAIL ANGELS =====
+    return user_service.get_user(id).__dict__, 200
 
 
-@app.route("/trailangels")
-def get_trail_angels():
-
-    angels = trail_angel_service.get_all_trail_angels()
-    return utils.jsonify_list(angels)
-
-
-@app.route("/trailangel")
-def get_trail_angel_by_id():
-    angel_id = __get_id(request)
-    angel = trail_angel_service.get_trail_angel(angel_id)
-    return jsonify(angel.__dict__)
-
-
-@app.post("/trailangel")
-def create_trail_angel():
-    json = request.get_json()
-    created_angel = trail_angel_service.create_trail_angel(TrailAngel(**json))
-    return jsonify(created_angel.__dict__)
+@app.post("/user_names")
+def get_user_names():
+    ids = request.get_json().get("ids")
+    if ids == None:
+        raise BadRequest("Missing ids in request body")
+    return user_service.get_users_names(ids)
 
 
 def __get_id(request):
@@ -136,44 +118,20 @@ def get_comments():
     comments = comment_service.get_comments_for_post(post_id)
     return utils.jsonify_list(comments)
 
-# ===== USERS =====
 
+db = Database("data/hiker_helper.db")
+db.setup()
 
-@app.route("/user")
-def get_user():
-    id = __get_id(request)
-    return user_service.get_user(id).__dict__, 200
+user_service = UserService(db)
 
+post_service = PostService(db)
 
-@app.post("/user_names")
-def get_user_names():
-    ids = request.get_json().get("ids")
-    if ids == None:
-        raise BadRequest("Missing ids in request body")
-    return user_service.get_users_names(ids)
-
+comment_service = CommentService(
+    db,
+    user_service,
+    post_service
+)
 
 if __name__ == "__main__":
-    db = Database("data/hiker_helper.db")
-
-    trail_angel_service = TrailAngelService(db)
-    hiker_service = HikerService(db)
-
-    post_service = PostService(db)
-
-    comment_service = CommentService(
-        db,
-        hiker_service,
-        trail_angel_service,
-        post_service
-    )
-
-    user_service = UserService(
-        db,
-        trail_angel_service,
-        hiker_service
-    )
-
-    db.setup()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

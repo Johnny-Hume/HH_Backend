@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Hiker:
+class User:
 
     id: str | None
     trail_name: str
@@ -14,4 +14,4 @@ class Hiker:
         print(json)
         id = json.get("id")
 
-        return Hiker(id, **json)
+        return User(id, **json)

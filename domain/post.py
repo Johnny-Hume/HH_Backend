@@ -1,4 +1,3 @@
-from domain.user_type import UserType
 from dataclasses import dataclass
 
 
@@ -8,7 +7,6 @@ class Post:
     id: str | None
     created_at: str | None
     user_id: str
-    user_type: UserType
     title: str
     text: str
 
