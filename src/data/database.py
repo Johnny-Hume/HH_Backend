@@ -101,6 +101,7 @@ class Database:
     def __get_row_by_field(self, id, table_name, field):
         sql = f"SELECT * FROM {table_name} WHERE {field}=?"
         with sqlite3.connect(self.db_name) as conn:
+            conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(sql, (id,))
             tup = cursor.fetchall()
@@ -141,6 +142,7 @@ class Database:
 
     def __execute(self, sql: str):
         with sqlite3.connect(self.db_name) as conn:
+            conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(sql)
             conn.commit()
@@ -148,6 +150,7 @@ class Database:
 
     def __execute_with_values(self, sql: str, values: tuple):
         with sqlite3.connect(self.db_name) as conn:
+            conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             cursor.execute(sql, values)
             rows = cursor.fetchall()
