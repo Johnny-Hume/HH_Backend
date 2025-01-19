@@ -11,7 +11,6 @@ class User:
     @classmethod
     def from_json(cls, json: dict):
 
-        print(json)
         id = json.get("id")
 
         return User(id, **json)

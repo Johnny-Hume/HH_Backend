@@ -22,6 +22,7 @@ CORS(app)
 
 @app.errorhandler(Exception)
 def handle(e):
+    print(e)
     print(traceback.format_exc())
     return "Internal Server Error", HTTPStatus.INTERNAL_SERVER_ERROR
 
@@ -68,9 +69,9 @@ def get_post():
 @app.post("/user")
 def create_user():
     r_json = request.get_json()
-    parsed = User(**r_json)
+    parsed = User.from_json(r_json)
     created_user = user_service.create_user(parsed)
-    return jsonify(created_user.__dict__)
+    return created_user.__dict__, 201
 
 
 @app.route("/users")
