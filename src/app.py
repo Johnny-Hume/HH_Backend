@@ -70,10 +70,10 @@ def get_post():
 
 @app.post("/hiker")
 def create_hiker():
-    r_json = request.get_json()
-    parsed_hiker = Hiker(**r_json)
+    json = request.get_json()
+    parsed_hiker = Hiker.from_json(json)
     created_hiker = hiker_service.create_hiker(parsed_hiker)
-    return jsonify(created_hiker.__dict__)
+    return jsonify(created_hiker), HTTPStatus.CREATED
 
 
 @app.route("/hikers")
@@ -123,7 +123,8 @@ def __get_id(request):
 @app.post("/comment")
 def create_comment():
     json = request.get_json()
-    created_comment = comment_service.create_comment(Comment(**json))
+    comment = Comment.from_json(json)
+    created_comment = comment_service.create_comment(comment)
     return created_comment.__dict__, 201
 
 

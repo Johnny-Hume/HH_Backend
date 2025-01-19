@@ -1,6 +1,17 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class Hiker:
 
-    def __init__(self, trail_name: str, bio: str, id=None) -> None:
-        self.id = id
-        self.trail_name = trail_name
-        self.bio = bio
+    id: str | None
+    trail_name: str
+    bio: str
+
+    @classmethod
+    def from_json(cls, json: dict):
+
+        print(json)
+        id = json.get("id")
+
+        return Hiker(id, **json)

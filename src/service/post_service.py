@@ -32,5 +32,5 @@ class PostService:
         row = self.db.save_post(post)
         return self.__post_from_row(row)
 
-    def __post_from_row(self, row: list):
-        return Post(*row)
+    def __post_from_row(self, row):
+        return Post(**row)

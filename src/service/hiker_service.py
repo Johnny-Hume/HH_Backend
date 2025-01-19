@@ -25,10 +25,7 @@ class HikerService:
         return hiker
 
     def hiker_from_row(self, row):
-        id = row[0]
-        trail_name = row[1]
-        bio = row[2]
-        return Hiker(id=id, trail_name=trail_name, bio=bio)
+        return Hiker(**row)
 
     def hikers_from_rows(self, rows):
         hikers = []

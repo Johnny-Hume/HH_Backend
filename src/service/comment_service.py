@@ -42,8 +42,7 @@ class CommentService:
         return comments
 
     def __comment_from_row(self, row) -> Comment:
-        id, created_at, *args = row
-        return Comment(*args, id=id, created_at=created_at)
+        return Comment(**row)
 
     def __validate_post_id(self, comment: Comment) -> None:
         self.post_service.get_post(comment.post_id)
